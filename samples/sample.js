@@ -1,3 +1,5 @@
+let a, b, c;
+
 function f() {
   // start-enforce-alphabetization
   a();

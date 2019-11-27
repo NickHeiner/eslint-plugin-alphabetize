@@ -8,6 +8,8 @@ const endDirective = 'end-enforce-alphabetization';
  *  1. Sort criteria is not configurable.
  *  2. Nesting sorted blocks is not permitted.
  *  3. Sorting only applies to the top-level node in the scope in which the comment appears.
+ *  4. Doesn't do a nice diff of the lines that are out of sort order; only the first unsorted line will be flagged.
+ *  5. No fixer.
  */
 
 module.exports = {
@@ -69,20 +71,22 @@ module.exports = {
             }
 
             sortedBlocks.forEach(sortedBlock => {
-              // console.log(sortedBlock.containingNode.body)
               const nodesToSort = sortedBlock.containingNode.body
                 .filter(({start, end}) => sortedBlock.start <= start && end <= sortedBlock.end);
 
               const sortedBodyNodes = _.sortBy(nodesToSort, nodeToSort => sourceCode.getText(nodeToSort));
 
-              nodesToSort.forEach((originalNode, index) => {
-                if (originalNode !== sortedBodyNodes[index]) {
+              for (const index of _.range(nodesToSort.length)) {
+                if (nodesToSort[index] !== sortedBodyNodes[index]) {
                   context.report({
                     node: nodesToSort[index],
                     message: `Lines between "${startDirective}" and "${endDirective}" should be ordered.`
                   });
+                  // If we report every node that's out of order, then we'd report every node after the first unsorted
+                  // one, unless we had a more sophisticated diffing algorithm.
+                  return;
                 }
-              });
+              }
             });
           }
         }; 
