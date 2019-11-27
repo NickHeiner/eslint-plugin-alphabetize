@@ -1,4 +1,4 @@
-console.log('imported');
+const _ = require('lodash');
 
 const startDirective = 'start-enforce-alphabetization';
 const endDirective = 'end-enforce-alphabetization';
@@ -40,12 +40,17 @@ module.exports = {
                     loc,
                     message: `There is already a "${startDirective}" block open, ` +
                       "so it's invalid to have a start here."
-                  })
+                  });
                   return;
                 }
+                
+                // getNodeByRangeIndex() appears to return null when it should really return `Program`.
+                // One such case is for index = 0
+                const containingNode = sourceCode.getNodeByRangeIndex(Math.max(start - 1, 0)) || node;
+
                 activeSortedBlock = {
                   start,
-                  containingNode: sourceCode.getNodeByRangeIndex(end + 1)
+                  containingNode
                 };
                 continue;
               }
@@ -54,7 +59,7 @@ module.exports = {
                   context.report({
                     loc,
                     message: `There is no "${startDirective} open, so it is invalid to have an end here.`
-                  })
+                  });
                   return;
                 }
                 activeSortedBlock.end = end;
@@ -62,40 +67,26 @@ module.exports = {
                 activeSortedBlock = null;
               }
             }
-          },
-          // '[body]': node => {
-          //   if (!Array.isArray(node.body)) {
-          //     return;
-          //   }
-            
-          //   sortedBlocks
-          //     .filter(({start, end}) => start >= node.start && end <= node.end)
-          //     .forEach(sortedBlock => {
-          //       if (!sortedBlock.narrowestScope) {
-          //         sortedBlock.narrowestScope = {start: node.start, end: node.end};
-          //       }
-          //       const smallestPreviouslyFoundScopeSizeForBlock = 
-          //         sortedBlock.narrowestScope.end - sortedBlock.narrowestScope.start; 
-          //       const currentScopeSize = node.end - node.start;
 
-          //       if (currentScopeSize < smallestPreviouslyFoundScopeSizeForBlock) {
-          //         sortedBlock.narrowestScope.start = node.start;
-          //         sortedBlock.narrowestScope.end = node.end;
-          //       }
-          //     });
-          // },
-          '[body]:exit': node => {
-            console.log(sortedBlocks);
-            // const blocksToSort = sortedBlocks
-            //   .filter(({narrowestScope}) => narrowestScope.start === node.start && narrowestScope.end === node.end)
-            //   // To improve perf, traverse node.body in a single pass, instead of once per sortedBlock.
-            //   .map(({start, end}) => node.body.filter(bodyElem => bodyElem.start >= start && bodyElem.end <= end))
-            //   .forEach(blocks => {
-            //     console.log(blocks[0]);
-            //   });
+            sortedBlocks.forEach(sortedBlock => {
+              // console.log(sortedBlock.containingNode.body)
+              const nodesToSort = sortedBlock.containingNode.body
+                .filter(({start, end}) => sortedBlock.start <= start && end <= sortedBlock.end);
+
+              const sortedBodyNodes = _.sortBy(nodesToSort, nodeToSort => sourceCode.getText(nodeToSort));
+
+              nodesToSort.forEach((originalNode, index) => {
+                if (originalNode !== sortedBodyNodes[index]) {
+                  context.report({
+                    node: nodesToSort[index],
+                    message: `Lines between "${startDirective}" and "${endDirective}" should be ordered.`
+                  });
+                }
+              });
+            });
           }
-        }
+        }; 
       }
-    } 
+    }
   }
-}
+};

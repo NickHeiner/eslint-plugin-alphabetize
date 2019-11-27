@@ -13,7 +13,6 @@
     "test": "yarn run lint && jest test.js",
     "lint": "eslint --max-warnings 0 --cache index.js test.js",
     "lint:fix": "yarn run lint --fix",
-
     "comment": "I used this hack to make eslint recognize the locally installed plugin. I'm not sure if there's a better way.",
     "set-up-demo": "yarn link && yarn link eslint-plugin-alphabetize",
     "demo": "eslint samples"
@@ -26,12 +25,17 @@
     "rules": {
       "alphabetize/_": "error"
     },
-    "extends": ["nth"],
-    "plugins": ["alphabetize"]
+    "extends": [
+      "nth"
+    ],
+    "plugins": [
+      "alphabetize"
+    ]
   },
   "license": "MIT",
   "dependencies": {
-    "eslint": "^6.7.1"
+    "eslint": "^6.7.1",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "eslint-config-nth": "^2.0.1",

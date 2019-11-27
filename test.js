@@ -5,8 +5,8 @@ const ruleTester = new RuleTester({parserOptions: {ecmaVersion: 2019}});
 
 ruleTester.run('_', rule, {
   valid: [
-    {code: `const a = 1; const b = 2;`},
-    {code: `const b = 1; const a = 2;`},
+    {code: 'const a = 1; const b = 2;'},
+    {code: 'const b = 1; const a = 2;'}
   ],
   invalid: [
     {
@@ -17,4 +17,4 @@ ruleTester.run('_', rule, {
       errors: [{message: 'Fak'}]
     }
   ]
-})
+});
