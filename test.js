@@ -12,6 +12,8 @@ ruleTester.run('_', rule, {
   valid: [
     {code: 'const a = 1; const b = 2;'},
     {code: 'const b = 1; const a = 2;'},
+
+    // Sorting only applies in designated blocks.
     {code: `
       let a;
       let outOfOrder;
@@ -20,6 +22,17 @@ ruleTester.run('_', rule, {
       // start-enforce-alphabetization
       const c = 1; 
       const d = 2;
+      // end-enforce-alphabetization
+    `},
+
+    // Sorting only applies to top-level nodes.
+    {code: `
+      // start-enforce-alphabetization
+      function a() {
+        let z;
+        let a;
+      }
+      function c() {}
       // end-enforce-alphabetization
     `}
   ],

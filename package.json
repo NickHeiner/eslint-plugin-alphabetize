@@ -10,7 +10,7 @@
     "eslintplugin"
   ],
   "scripts": {
-    "test": "yarn run lint && jest test.js",
+    "test": "yarn run lint && node test.js",
     "lint": "eslint --max-warnings 0 --cache index.js test.js",
     "lint:fix": "yarn run lint --fix",
     "comment": "I used this hack to make eslint recognize the locally installed plugin. I'm not sure if there's a better way.",
