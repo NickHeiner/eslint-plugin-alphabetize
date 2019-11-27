@@ -1,0 +1,25 @@
+{
+  "name": "eslint-plugin-alphabetize",
+  "version": "1.0.0",
+  "description": "Enforce that any arbitrary code block is alphabetized",
+  "main": "index.js",
+  "repository": "git@github.com:NickHeiner/eslint-plugin-alphabetize.git",
+  "author": "Nick Heiner <nth23@cornell.edu>",
+  "keywords": [
+    "eslint",
+    "eslintplugin"
+  ],
+  "scripts": {
+    "test": "yarn run lint && jest test.js",
+    "lint": "eslint --max-warnings 0 --cache index.js test.js",
+    "lint:fix": "yarn run lint --fix"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "eslint": "^6.7.1"
+  },
+  "devDependencies": {
+    "eslint-config-nth": "^2.0.1",
+    "jest": "^24.9.0"
+  }
+}
