@@ -1,4 +1,4 @@
-const {rules: {_: rule}} = require('./');
+const {rules: {_: rule}} = require('.');
 const {RuleTester} = require('eslint');
 
 const ruleTester = new RuleTester({parserOptions: {ecmaVersion: 2019}});

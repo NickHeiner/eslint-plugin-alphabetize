@@ -1,3 +1,4 @@
+console.log('imported');
 module.exports = {
   rules: {
     _: {
@@ -11,7 +12,8 @@ module.exports = {
       },
       create: context => {
         return {
-          ReturnStatement() {
+          '*': () => {
+            console.log('rule');
           }
         }
       }
