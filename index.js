@@ -27,8 +27,6 @@ module.exports = {
         const sortedBlocks = [];
         const sourceCode = context.getSourceCode();
 
-        // console.log({node: sourceCode.getNodeByRangeIndex(20)});
-
         return {
           // node.comments is only populated for Program, so we need to do a global scan first to find all comments.
           Program: node => {
@@ -60,7 +58,7 @@ module.exports = {
                 if (!activeSortedBlock) {
                   context.report({
                     loc,
-                    message: `There is no "${startDirective} open, so it is invalid to have an end here.`
+                    message: `There is no "${startDirective}" open, so it's invalid to have an end here.`
                   });
                   return;
                 }
