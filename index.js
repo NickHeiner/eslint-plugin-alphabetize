@@ -3,16 +3,6 @@ const _ = require('lodash');
 const startDirective = 'start-enforce-alphabetization';
 const endDirective = 'end-enforce-alphabetization';
 
-/**
- * Limitations:
- *  1. Sort criteria is not configurable.
- *  2. Nesting sorted blocks is not permitted.
- *  3. Sorting only applies to the top-level node in the scope in which the comment appears.
- *  4. Doesn't do a nice diff of the lines that are out of sort order; only the first unsorted line will be flagged.
- *  5. No fixer.
- *  6. Should EOF implicitly be an endDirective?
- */
-
 module.exports = {
   rules: {
     _: {
@@ -88,7 +78,7 @@ module.exports = {
                     const sortedBodyNodesText = sortedBodyNodes
                       .slice(index - windowSize, index + windowSize)
                       .map(sortedNode => sourceCode.getText(sortedNode));
-                      
+
                     /* eslint-disable no-console */
                     console.log("A properly-ordered subset of the source code that's currently out of order:");
                     console.log(sortedBodyNodesText);
