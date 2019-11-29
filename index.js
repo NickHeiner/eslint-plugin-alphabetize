@@ -66,7 +66,7 @@ module.exports = {
               context.report({
                 ..._.pick(activeSortedBlock, 'loc'),
                 message: `This "${startDirective}" does not have a "${endDirective}".`
-              })
+              });
             }
 
             sortedBlocks.forEach(sortedBlock => {
