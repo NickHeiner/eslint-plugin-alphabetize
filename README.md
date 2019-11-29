@@ -100,3 +100,6 @@ const a = 1;
 
 ## Future Ideas
 1. Should EOF implicitly be an endDirective?
+
+## Local Dev
+If you're developing this module locally, run `yarn run set-up-demo`.
