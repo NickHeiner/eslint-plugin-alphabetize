@@ -41,7 +41,7 @@ If you want to enforce that object keys are sorted for only certain objects, use
 const unsortedObject = {Z, B, A};
 
 /* eslint-enable sort-keys */
-const sortedObject = {A, B, C};
+const sortedObject = { A, B, C};
 /* eslint-disable sort-keys */
 ```
 
