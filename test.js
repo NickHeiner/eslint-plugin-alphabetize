@@ -13,7 +13,7 @@ const invalidStartMessage =
 const invalidEndMessage = `There is no "start-enforce-alphabetization" open, so it's invalid to have an end here.`;
 /* eslint-enable quotes */
 
-const runTest = ruleTester => {
+const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
 
   const prepareTestCaseString = codeString => dedent(codeString.trim());
   const prepareTestCases = testCases => testCases.map(testCase => {
@@ -75,7 +75,9 @@ const runTest = ruleTester => {
         }
         function c() {}
         // end-enforce-alphabetization
-      `
+      `,
+
+      ...extraTests.valid
     ]),
     invalid: prepareTestCases([
       {
@@ -155,7 +157,8 @@ const runTest = ruleTester => {
           )
         `,
         errors: [{message: invalidOrderErrorMessage, line: 4, column: 3, endLine: 4, endColumn: 4}]
-      }
+      },
+      ...extraTests.invalid
     ])
   });
 };
@@ -163,7 +166,31 @@ const runTest = ruleTester => {
 runTest(new RuleTester({
   parserOptions: {ecmaVersion: 2019}, 
   parser: require.resolve('@typescript-eslint/parser')
-}));
+}), {
+  valid: [`
+    // Enum members
+    const enum E {
+      // start-enforce-alphabetization
+      A,
+      B,
+      C
+      // end-enforce-alphabetization
+    }
+  `],
+  invalid: [{
+    code: `
+      // Enum members
+      const enum E {
+        // start-enforce-alphabetization
+        B,
+        A,
+        C
+        // end-enforce-alphabetization
+      }
+    `,
+    errors: [{message: invalidOrderErrorMessage, line: 4, column: 3, endLine: 4, endColumn: 4}]
+  }]
+});
 
 runTest(new RuleTester({
   parserOptions: {ecmaVersion: 2019}

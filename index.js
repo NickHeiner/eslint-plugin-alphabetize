@@ -60,7 +60,13 @@ module.exports = {
             }
 
             sortedBlocks.forEach(sortedBlock => {
-              const getNodesToSort = parentNode => parentNode.body || parentNode.elements || parentNode.arguments;
+              const getNodesToSort = parentNode => {
+                const childNodes = parentNode.body || parentNode.elements || parentNode.arguments || parentNode.members;
+                if (!childNodes) {
+                  throw new Error(`eslint-plugin-alphabetize is not able to handle AST node type "${parentNode.type}"`);
+                }
+                return childNodes;
+              };
 
               const nodesToSort = getNodesToSort(sortedBlock.containingNode)
                 .filter(({range: [start, end]}) => sortedBlock.start <= start && end <= sortedBlock.end);
@@ -78,7 +84,7 @@ module.exports = {
                   if (process.env.ESLINT_ALPHABETIZE_DEBUG === 'true') {
                     const windowSize = 4;
                     const sortedBodyNodesText = sortedBodyNodes
-                      .slice(index - windowSize, index + windowSize)
+                      .slice(Math.max(index - windowSize, 0), index + windowSize)
                       .map(sortedNode => sourceCode.getText(sortedNode));
 
                     /* eslint-disable no-console */

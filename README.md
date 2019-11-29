@@ -32,6 +32,19 @@ Don't use it for code where you consistently alphabetize. For instance, do not u
 statements at the top of your file. It would be a pain to wrap every `import` block in your codebase in this rule's 
 directives. Instead, use something like [`eslint-plugin-import`](https://www.npmjs.com/package/eslint-plugin-import).
 
+If you want to enforce that object keys are sorted for only certain objects, use `sort-keys`:
+
+```js
+/* eslint sort-keys:error */
+/* eslint-disable sort-keys */
+
+const unsortedObject = {Z, B, A};
+
+/* eslint-enable sort-keys */
+const sortedObject = {A, B, C};
+/* eslint-disable sort-keys */
+```
+
 ### Usage
 Wrap the section you want to be alphabetized in a pair of directive comments:
 
@@ -71,11 +84,19 @@ const a = 1;
 ## Limitations
 1. Sort criteria is not configurable.
 1. Nesting sorted blocks is not permitted.
-1. Sorting only applies to the top-level node in the scope in which the comment appears.
+1. Sorting only applies to the top-level node in the scope in which the comment appears. It also does not apply to 
+  comments. For instance, the following will be considered valid:
+    ```js
+    // start-enforce-alphabetization
+    readConfig('./config-site-a.json')
+    // readConfig('./config-site-z.json')
+    readConfig('./config-site-c.json')
+    // end-enforce-alphabetization
+    ```
 1. Doesn't do a nice diff of the lines that are out of sort order; only the first unsorted line will be flagged.
 1. No fixer.
 1. The feedback to the user explaining the problem is not great. It works better when you have an already-sorted block
- and you need to avoid messing it up. It's more cumbersome when you're sorting a previously unsorted big block.
+  and you need to avoid messing it up. It's more cumbersome when you're sorting a previously unsorted big block.
 
 ## Future Ideas
 1. Should EOF implicitly be an endDirective?
