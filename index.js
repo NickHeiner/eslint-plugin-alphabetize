@@ -60,7 +60,9 @@ module.exports = {
             }
 
             sortedBlocks.forEach(sortedBlock => {
-              const nodesToSort = sortedBlock.containingNode.body
+              const getNodesToSort = parentNode => parentNode.body || parentNode.elements || parentNode.arguments;
+
+              const nodesToSort = getNodesToSort(sortedBlock.containingNode)
                 .filter(({range: [start, end]}) => sortedBlock.start <= start && end <= sortedBlock.end);
 
               const sortedBodyNodes = _.sortBy(nodesToSort, nodeToSort => sourceCode.getText(nodeToSort));

@@ -74,6 +74,8 @@ const a = 1;
 1. Sorting only applies to the top-level node in the scope in which the comment appears.
 1. Doesn't do a nice diff of the lines that are out of sort order; only the first unsorted line will be flagged.
 1. No fixer.
+1. The feedback to the user explaining the problem is not great. It works better when you have an already-sorted block
+ and you need to avoid messing it up. It's more cumbersome when you're sorting a previously unsorted big block.
 
 ## Future Ideas
 1. Should EOF implicitly be an endDirective?

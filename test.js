@@ -43,6 +43,28 @@ const runTest = ruleTester => {
         const d = 2;
         // end-enforce-alphabetization
       `,
+
+      `
+        // Sorting works for array members 
+        const arr = [
+          // start-enforce-alphabetization
+          a(),
+          b(),
+          c()
+          // end-enforce-alphabetization
+        ]
+      `,
+
+      `
+        // Sorting works for method arguments
+        f(
+          // start-enforce-alphabetization
+          a,
+          b,
+          c
+          // end-enforce-alphabetization
+        )
+      `,
   
       `
         // Sorting only applies to top-level nodes.
@@ -107,6 +129,32 @@ const runTest = ruleTester => {
           // end-enforce-alphabetization
         `,
         errors: [{message: invalidOrderErrorMessage, line: 7, column: 1, endLine: 7, endColumn: 13}]
+      },
+      {
+        code: `
+          // Sorting works for array members 
+          const arr = [
+            // start-enforce-alphabetization
+            b(),
+            a(),
+            c()
+            // end-enforce-alphabetization
+          ]
+        `,
+        errors: [{message: invalidOrderErrorMessage, line: 4, column: 3, endLine: 4, endColumn: 6}]
+      },
+      {
+        code: `
+          // Sorting works for method arguments
+          f(
+            // start-enforce-alphabetization
+            b,
+            a,
+            c
+            // end-enforce-alphabetization
+          )
+        `,
+        errors: [{message: invalidOrderErrorMessage, line: 4, column: 3, endLine: 4, endColumn: 4}]
       }
     ])
   });
