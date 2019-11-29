@@ -79,8 +79,22 @@ module.exports = {
                 if (nodesToSort[index] !== sortedBodyNodes[index]) {
                   context.report({
                     node: nodesToSort[index],
-                    message: `Lines between "${startDirective}" and "${endDirective}" should be ordered.`
+                    message: `Lines between "${startDirective}" and "${endDirective}" should be ordered. ` +
+                      'To see the proper ordering, rerun this command with env var `ESLINT_ALPHABETIZE_DEBUG=true`.'
                   });
+
+                  if (process.env.ESLINT_ALPHABETIZE_DEBUG === 'true') {
+                    const windowSize = 4;
+                    const sortedBodyNodesText = sortedBodyNodes
+                      .slice(index - windowSize, index + windowSize)
+                      .map(sortedNode => sourceCode.getText(sortedNode));
+                      
+                    /* eslint-disable no-console */
+                    console.log("A properly-ordered subset of the source code that's currently out of order:");
+                    console.log(sortedBodyNodesText);
+                    /* eslint-enable no-console */
+                  }
+
                   // If we report every node that's out of order, then we'd report every node after the first unsorted
                   // one, unless we had a more sophisticated diffing algorithm.
                   return;

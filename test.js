@@ -3,7 +3,8 @@ const {RuleTester} = require('eslint');
 const dedent = require('dedent');
 
 const invalidOrderErrorMessage = 
-  'Lines between "start-enforce-alphabetization" and "end-enforce-alphabetization" should be ordered.';
+  'Lines between \"start-enforce-alphabetization\" and \"end-enforce-alphabetization\" should be ordered. ' + 
+    'To see the proper ordering, rerun this command with env var `ESLINT_ALPHABETIZE_DEBUG=true`.';
 
 // Bug in the quotes rule: https://github.com/eslint/eslint/issues/9433.
 /* eslint-disable quotes */
@@ -23,8 +24,8 @@ const runTest = ruleTester => {
     return {
       code: prepareTestCaseString(code),
       ...rest
-    }
-  })
+    };
+  });
 
   ruleTester.run('_', rule, {
     valid: prepareTestCases([
@@ -109,7 +110,7 @@ const runTest = ruleTester => {
       }
     ])
   });
-}
+};
 
 runTest(new RuleTester({
   parserOptions: {ecmaVersion: 2019}, 
