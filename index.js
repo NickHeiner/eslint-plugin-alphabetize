@@ -10,6 +10,7 @@ const endDirective = 'end-enforce-alphabetization';
  *  3. Sorting only applies to the top-level node in the scope in which the comment appears.
  *  4. Doesn't do a nice diff of the lines that are out of sort order; only the first unsorted line will be flagged.
  *  5. No fixer.
+ *  6. Should EOF implicitly be an endDirective?
  */
 
 module.exports = {
@@ -32,7 +33,7 @@ module.exports = {
           Program: node => {
             let activeSortedBlock = null;
 
-            for (const {value, start, end, loc} of node.comments) {
+            for (const {value, range: [start, end], loc} of node.comments) {
               const normalizedValue = value.trim();
               if (normalizedValue === startDirective) {
                 if (activeSortedBlock) {
@@ -70,7 +71,7 @@ module.exports = {
 
             sortedBlocks.forEach(sortedBlock => {
               const nodesToSort = sortedBlock.containingNode.body
-                .filter(({start, end}) => sortedBlock.start <= start && end <= sortedBlock.end);
+                .filter(({range: [start, end]}) => sortedBlock.start <= start && end <= sortedBlock.end);
 
               const sortedBodyNodes = _.sortBy(nodesToSort, nodeToSort => sourceCode.getText(nodeToSort));
 
