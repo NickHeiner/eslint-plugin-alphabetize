@@ -28,11 +28,9 @@ readConfig('./config-site-c.json')
 ```
 
 ### When Not to Use This
-Don't use it for code where you consistently alphabetize. For instance, do not use this for `import` or `require` 
-statements at the top of your file. It would be a pain to wrap every `import` block in your codebase in this rule's 
-directives. Instead, use something like [`eslint-plugin-import`](https://www.npmjs.com/package/eslint-plugin-import).
+Don't use it for code where you consistently alphabetize. For instance, do not use this for `import` or `require` statements at the top of your file. It would be a pain to wrap every `import` block in your codebase in this rule's directives. Instead, use something like [`eslint-plugin-import`](https://www.npmjs.com/package/eslint-plugin-import).
 
-If you want to enforce that object keys are sorted for only certain objects, use `sort-keys`:
+If you want to enforce that object keys are sorted for only certain objects, use [`sort-keys`](https://eslint.org/docs/rules/sort-keys):
 
 ```js
 /* eslint sort-keys:error */
@@ -62,8 +60,7 @@ function c() {}
 ```
 
 ## Design Considerations
-I'm not thrilled with introducing the custom `(start|end)-enforce-alphabetization` directives. However, if we only use
-eslint directives, it's pretty cumbersome to use:
+I'm not thrilled with introducing the custom `(start|end)-enforce-alphabetization` directives. However, if we only use eslint directives, it's pretty cumbersome to use:
 
 ```js
 /* eslint alphabetize/_: error */
@@ -84,8 +81,7 @@ const a = 1;
 ## Limitations
 1. Sort criteria is not configurable.
 1. Nesting sorted blocks is not permitted.
-1. Sorting only applies to the top-level node in the scope in which the comment appears. It also does not apply to 
-  comments. For instance, the following will be considered valid:
+1. Sorting only applies to the top-level node in the scope in which the comment appears. It also does not apply to comments. For instance, the following will be considered valid:
     ```js
     // start-enforce-alphabetization
     readConfig('./config-site-a.json')
@@ -95,8 +91,7 @@ const a = 1;
     ```
 1. Doesn't do a nice diff of the lines that are out of sort order; only the first unsorted line will be flagged.
 1. No fixer.
-1. The feedback to the user explaining the problem is not great. It works better when you have an already-sorted block
-  and you need to avoid messing it up. It's more cumbersome when you're sorting a previously unsorted big block.
+1. The feedback to the user explaining the problem is not great. It works better when you have an already-sorted block and you need to avoid messing it up. It's more cumbersome when you're sorting a previously unsorted big block.
 
 ## Future Ideas
 1. Should EOF implicitly be an endDirective?

@@ -120,6 +120,16 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
       },
       {
         code: `
+          // Start with no end
+          // start-enforce-alphabetization
+        `,
+        errors: [{
+          message: 'This "start-enforce-alphabetization" does not have a "end-enforce-alphabetization".', 
+          line: 2, column: 1, endLine: 2, endColumn: 33
+        }]
+      },
+      {
+        code: `
           // Alphabetization only applies to enforced section.
           let a;
           let outOfOrder;

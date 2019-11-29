@@ -19,10 +19,12 @@ module.exports = {
         const sourceCode = context.getSourceCode();
 
         return {
-          // node.comments is only populated for Program, so we need to do a global scan first to find all comments.
+          // node.comments is only populated for Program.
           Program: node => {
             let activeSortedBlock = null;
 
+            // The `range` field is consistently populated with the builtin parser and with @typescript-eslint/parser.
+            // The `start` and `end` fields are only available with the builtin parser.
             for (const {value, range: [start, end], loc} of node.comments) {
               const normalizedValue = value.trim();
               if (normalizedValue === startDirective) {
@@ -36,10 +38,11 @@ module.exports = {
                 }
                 
                 // getNodeByRangeIndex() appears to return null when it should really return `Program`.
-                // One such case is for index = 0
+                // One such case is when index = 0.
                 const containingNode = sourceCode.getNodeByRangeIndex(Math.max(start - 1, 0)) || node;
 
                 activeSortedBlock = {
+                  loc,
                   start,
                   containingNode
                 };
@@ -57,6 +60,13 @@ module.exports = {
                 sortedBlocks.push(activeSortedBlock);
                 activeSortedBlock = null;
               }
+            }
+
+            if (activeSortedBlock) {
+              context.report({
+                ..._.pick(activeSortedBlock, 'loc'),
+                message: `This "${startDirective}" does not have a "${endDirective}".`
+              })
             }
 
             sortedBlocks.forEach(sortedBlock => {
@@ -88,7 +98,7 @@ module.exports = {
                       .map(sortedNode => sourceCode.getText(sortedNode));
 
                     /* eslint-disable no-console */
-                    console.log("A properly-ordered subset of the source code that's currently out of order:");
+                    console.log('If this section of the code were properly sorted, it would look like:');
                     console.log(sortedBodyNodesText);
                     /* eslint-enable no-console */
                   }
