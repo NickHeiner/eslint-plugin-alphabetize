@@ -79,9 +79,31 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
         // end-enforce-alphabetization
       `,
 
+      {
+        code: `
+          // Function call
+          // start-enforce-alphabetization:numeric
+          require('11-z');
+          require('100-a');
+          require('111-a')
+          // end-enforce-alphabetization
+        `
+      },
+
       ...extraTests.valid
     ]),
     invalid: prepareTestCases([
+      {
+        code: `
+          // Function call
+          // start-enforce-alphabetization:numeric
+          require('100-a');
+          require('11-z');
+          require('111-z')
+          // end-enforce-alphabetization
+        `,
+        errors: [{message: invalidOrderErrorMessage, line: 3, column: 1, endLine: 3, endColumn: 16}]
+      },
       {
         code: `
           // VariableDeclaration
@@ -89,7 +111,7 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
           const b = 1; 
           const a = 2;
           // end-enforce-alphabetization
-          `,
+        `,
         errors: [{message: invalidOrderErrorMessage, line: 3, column: 1, endLine: 3, endColumn: 13}]
       },
       {
