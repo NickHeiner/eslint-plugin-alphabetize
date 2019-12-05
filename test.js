@@ -102,7 +102,7 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
           require('111-z')
           // end-enforce-alphabetization
         `,
-        errors: [{message: invalidOrderErrorMessage, line: 3, column: 1, endLine: 3, endColumn: 16}]
+        errors: [{message: invalidOrderErrorMessage, line: 3, column: 1, endLine: 3, endColumn: 18}]
       },
       {
         code: `

@@ -27,7 +27,7 @@ module.exports = {
             // The `start` and `end` fields are only available with the builtin parser.
             for (const {value, range: [start, end], loc} of node.comments) {
               const normalizedValue = value.trim();
-              if (normalizedValue === startDirective) {
+              if (normalizedValue.startsWith(startDirective)) {
                 if (activeSortedBlock) {
                   context.report({
                     loc,
@@ -44,6 +44,7 @@ module.exports = {
                 activeSortedBlock = {
                   loc,
                   start,
+                  startDirective: normalizedValue,
                   containingNode
                 };
                 continue;
@@ -81,7 +82,17 @@ module.exports = {
               const nodesToSort = getNodesToSort(sortedBlock.containingNode)
                 .filter(({range: [start, end]}) => sortedBlock.start <= start && end <= sortedBlock.end);
 
-              const sortedBodyNodes = _.sortBy(nodesToSort, nodeToSort => sourceCode.getText(nodeToSort));
+              const sortParamMatch = sortedBlock.startDirective.match(new RegExp(`${startDirective}(:(numeric))?`))[2];
+              const numericSort = sortParamMatch === 'numeric';
+              const sortedBodyNodes = _.sortBy(nodesToSort, nodeToSort => {
+                const nodeText = sourceCode.getText(nodeToSort);
+                if (!numericSort) {
+                  return nodeText;
+                }
+
+                const numberToSortBy = parseInt(nodeText.match(/\d+/)[0]);
+                return _.isNaN(numberToSortBy) ? nodeText : numberToSortBy;
+              });
 
               for (const index of _.range(nodesToSort.length)) {
                 if (nodesToSort[index] !== sortedBodyNodes[index]) {
