@@ -27,7 +27,9 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
     };
   });
 
-  ruleTester.run('_', rule, {
+  const ruleName = extraTests.testPrefix ? `_ ${extraTests.testPrefix}` : '_';
+  
+  ruleTester.run(ruleName, rule, {
     valid: prepareTestCases([
       'const a = 1; const b = 2;',
       'const b = 1; const a = 2;',
@@ -88,7 +90,6 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
           const a = 2;
           // end-enforce-alphabetization
           `,
-        options: [{sort: true}],
         errors: [{message: invalidOrderErrorMessage, line: 3, column: 1, endLine: 3, endColumn: 13}]
       },
       {
@@ -100,7 +101,6 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
           function b() {}
           // end-enforce-alphabetization
         `,
-        options: [{sort: true}],
         errors: [{message: invalidOrderErrorMessage, line: 4, column: 1, endLine: 4, endColumn: 16}]
       },
       {
@@ -199,7 +199,8 @@ runTest(new RuleTester({
       }
     `,
     errors: [{message: invalidOrderErrorMessage, line: 4, column: 3, endLine: 4, endColumn: 4}]
-  }]
+  }],
+  testPrefix: 'typescript parser'
 });
 
 runTest(new RuleTester({
