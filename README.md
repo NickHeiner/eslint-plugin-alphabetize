@@ -85,6 +85,8 @@ require('test-456-hella-buttons');
 // end-enforce-alphabetization
 ```
 
+The numeric directive works by looking for the first match of `/(\d?)/` in each statement. If the result of `parseInt(regexMatch)` is `NaN`, then as a fallback, the entire statement is sorted as a string.
+
 ## Design Considerations
 I'm not thrilled with introducing the custom `(start|end)-enforce-alphabetization` directives. However, if we only use eslint directives, it's pretty cumbersome to use:
 
