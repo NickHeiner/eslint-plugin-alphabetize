@@ -59,6 +59,32 @@ function c() {}
 // end-enforce-alphabetization
 ```
 
+#### Numeric Sorting
+Sometimes, you want to sort by a number that appears on each line, instead of considering the entire string lexicographically. Imagine you have a series of requires for AB tests:
+
+```js
+require('test-123-no-more-buttons');
+require('test-456-hella-buttons');
+require('test-1234-all-buttons-are-blink-tags');
+```
+
+Lexicographic sort would consider `1234` to come before `456`. But in this case, readers may find it more intuitive to sort the test id numerically, producing the ordering above. To achieve this, use the `:numeric` directive:
+
+```js
+// start-enforce-alphabetization:numeric
+require('test-123-no-more-buttons');
+require('test-456-hella-buttons');
+require('test-1234-all-buttons-are-blink-tags');
+// end-enforce-alphabetization
+
+// What it would be without numeric:
+// start-enforce-alphabetization
+require('test-123-no-more-buttons');
+require('test-1234-all-buttons-are-blink-tags');
+require('test-456-hella-buttons');
+// end-enforce-alphabetization
+```
+
 ## Design Considerations
 I'm not thrilled with introducing the custom `(start|end)-enforce-alphabetization` directives. However, if we only use eslint directives, it's pretty cumbersome to use:
 
