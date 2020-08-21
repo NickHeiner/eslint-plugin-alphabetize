@@ -90,7 +90,13 @@ module.exports = {
                   return nodeText;
                 }
 
-                const numberToSortBy = parseInt(nodeText.match(/\d+/)[0]);
+                const numberMatch = nodeText.match(/\d+/);
+
+                if (!numberMatch) {
+                  return nodeText;
+                }
+
+                const numberToSortBy = parseInt(numberMatch[0]);
                 return _.isNaN(numberToSortBy) ? nodeText : numberToSortBy;
               });
 
