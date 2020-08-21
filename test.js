@@ -90,6 +90,30 @@ const runTest = (ruleTester, extraTests = {valid: [], invalid: []}) => {
         `
       },
 
+      {
+        code: `
+          // Numeric mode, but some entries don't have numbers.
+          // start-enforce-alphabetization:numeric
+          require('100-a');
+          require('111-a')
+          require('a');
+          // end-enforce-alphabetization
+        `
+      },
+
+      {
+        code: `
+          // Numeric mode, but some entries don't start with numbers.
+          // start-enforce-alphabetization:numeric
+          require('100-a');
+          require('111-a')
+          require('a');
+          require('a-1');
+          require('a-2');
+          // end-enforce-alphabetization
+        `
+      },
+
       ...extraTests.valid
     ]),
     invalid: prepareTestCases([
